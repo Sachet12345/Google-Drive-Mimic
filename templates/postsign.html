@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style>
+		div{
+			position:absolute;
+			right:10px;
+			top:5px;
+		}
+	</style>
+</head>
+<body>
+	 {% csrf_token %}
+<input type="file" name="files[]" id="files">
+<input type="hidden" name="url" id="url">
+<button type="button" onclick="uploadimage()">Upload</button>
+<div>
+<button type = "button" onclick="location.href='{% url 'log' %}'">logout</button>
+</div>
+</body>
+<script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
+<script>
+	 var config = {
+    
+	apiKey: "AIzaSyAkUYQ51_t6T-qE_lJBMS3bVy-iuN_9AeI",
+    authDomain: "smartcampus-a19e2.firebaseapp.com",
+    databaseURL: "https://smartcampus-a19e2.firebaseio.com",
+    projectId: "smartcampus-a19e2",
+    storageBucket: "gs://smartcampus-a19e2.appspot.com",
+    messagingSenderId: "945557570664"
+  };
+  firebase.initializeApp(config);
+  function uploadimage()
+  {
+  var storage=firebase.storage();
+  var file=document.getElementById("files").files[0];
+  var storageRef=storage.ref();
+  //console.log(file.name);
+  var thisref=storageRef.child(file.name).put(file);
+  thisref.on('state_changed',function(snapshot){
+  	console.log("File uploaded succesfully.")
+  },function(){
+  	var downloadURL = thisref.snapshot.downloadURL;
+  	console.log("got url");
+  	document.getElementById("url").value = downloadURL;
+  	alert("File uploaded successfully.");
+  });
+}
+
+  
+  
+
+</script>
+</html>
